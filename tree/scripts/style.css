@@ -1,0 +1,41 @@
+body {
+  margin: 0;
+  font-size: 14px;
+  font-family: "Helvetica Neue", Helvetica;
+}
+
+#chart, #header, #footer {
+  position: absolute;
+  top: 0;
+}
+
+/* SVG Specific */
+#chart{
+    display: block;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
+#chart svg {
+    display:block;
+    margin:0 auto;
+}
+.node circle {
+  cursor: pointer;
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+path.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1.5px;
+}
+
+#container {
+	width: 80%;
+    margin: 0px auto;
+}
+
+    
