@@ -1,0 +1,25 @@
+{
+  "name": "stoic-perspective",
+  "version": "0.0.0",
+  "description": "Stoic Dendrogram",
+  "main": "demoController.js",
+  "dependencies": {
+    "chai": "~1.8.1",
+    "mocha": "~1.14.0"
+  },
+  "devDependencies": {
+    "mocha": "~1.14.0",
+    "chai": "~1.8.1"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/patrickgamer/stoic-perspective.git"
+  },
+  "author": "Diaa Kasem",
+  "license": "BSD",
+  "gitHead": "e09c7aa6481793b44366537d2304c5b5240f64fb",
+  "readmeFilename": "README.md"
+}
