@@ -3,6 +3,5 @@ dist
 .tmp
 .sass-cache
 app/bower_components
-*.coffee
 *.map
 node_modules

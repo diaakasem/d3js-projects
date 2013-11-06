@@ -17,11 +17,12 @@
         var map;
         map = function(data, field) {
           var grouped;
+          data = _.filter(data, field);
           grouped = _.groupBy(data, field);
           return _.map(grouped, function(arr, name) {
             return {
               name: name,
-              children: arr.length > 1 ? _.map(arr, function(e) {
+              children: arr.length > 0 ? _.map(arr, function(e) {
                 return _.omit(e, field);
               }) : []
             };
@@ -29,13 +30,16 @@
         };
         days.children = map(data, 'DATE');
         _.each(days.children, function(date) {
-          date.children = map(date.children, 'TIME');
+          date.children = date ? map(date.children, 'TIME') : [];
           return _.each(date.children, function(time) {
-            time.children = map(time.children, 'EVENTTYPE');
+            time.children = time ? map(time.children, 'EVENTTYPE') : [];
             return _.each(time.children, function(eventtype) {
-              eventtype.children = map(eventtype.children, 'EVENT');
-              return _.each(eventtype.children, function(details) {
-                return details.children = map(details.children, 'ADDITIONALDETAILS');
+              eventtype.children = eventtype ? map(eventtype.children, 'EVENT') : [];
+              return _.each(eventtype.children, function(event) {
+                event.children = event ? map(event.children, 'ADDITIONALDETAILS') : [];
+                return _.each(event.children, function(details) {
+                  return details.children = [];
+                });
               });
             });
           });
