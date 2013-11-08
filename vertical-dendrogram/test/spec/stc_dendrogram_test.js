@@ -58,7 +58,10 @@
     }
   ];
 
-  $container = $('<div/>').attr('height', 500);
+  $container = $('<div/>').css({
+    'height': 500,
+    'width': 500
+  });
 
   describe("dendrogram", function() {
     beforeEach(function() {
@@ -67,7 +70,17 @@
         return require(['d3', "stc_dendrogram"], function(d3, graph) {
           _this.d3 = d3;
           _this.graph = graph;
-          return spyOn(_this.d3.layout, 'tree').andCallThrough();
+          _this.treeLayout = _this.d3.layout.tree();
+          spyOn(_this.d3.layout, 'tree').andCallFake(function() {
+            spyOn(_this.treeLayout, 'size').andCallThrough();
+            spyOn(_this.treeLayout, 'sort').andCallThrough();
+            return _this.treeLayout;
+          });
+          _this.diagonal = _this.d3.svg.diagonal();
+          return spyOn(_this.d3.svg, 'diagonal').andCallFake(function() {
+            spyOn(_this.diagonal, 'projection').andCallThrough();
+            return _this.diagonal;
+          });
         });
       });
       return waitsFor(function() {
@@ -84,17 +97,37 @@
         return expect(this.graph.bind).toBeDefined();
       });
     });
-    return describe("layout", function() {
+    describe("layout", function() {
       it("should have create a tree layout", function() {
         return runs(function() {
           this.graph.bind({}, $container, demoData);
           return expect(this.d3.layout.tree).toHaveBeenCalled();
         });
       });
-      return it("should have create a tree layout with the correct width and height", function() {
+      it("should have create a tree layout with the correct width and height", function() {
         return runs(function() {
           this.graph.bind({}, $container, demoData);
-          return expect(this.d3.layout.tree).toHaveBeenCalled();
+          return expect(this.treeLayout.size).toHaveBeenCalledWith([480, 500]);
+        });
+      });
+      return it('should have create a sorted tree layout', function() {
+        return runs(function() {
+          this.graph.bind({}, $container, demoData);
+          return expect(this.treeLayout.sort).toHaveBeenCalledWith(jasmine.any(Function));
+        });
+      });
+    });
+    return describe('diagonal projection', function() {
+      it('should be created', function() {
+        return runs(function() {
+          this.graph.bind({}, $container, demoData);
+          return expect(this.d3.svg.diagonal).toHaveBeenCalled();
+        });
+      });
+      return it('should create a projection', function() {
+        return runs(function() {
+          this.graph.bind({}, $container, demoData);
+          return expect(this.diagonal.projection).toHaveBeenCalled();
         });
       });
     });
