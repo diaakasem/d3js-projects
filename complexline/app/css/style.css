@@ -1,0 +1,75 @@
+body {
+  font-size: 10px;
+  font-family: 'Helvetica Neue', sans-serif;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.payoutSvg .linePayout {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+.payoutSvg .shadedPayout {
+  fill: red;
+  stroke-width: 0px;
+  opacity: 0.4;
+}
+.forecastArrow {
+  fill: #ff0000;
+  stroke-width: 0px;
+}
+.forecastSvg .forecastLine {
+  fill: none;
+  stroke: #ff0000;
+  stroke-width: 3px;
+}
+.forecastSvg .forecastSubText {
+  fill: #ff0000;
+}
+.forecastSvg .forecastText {
+  font-size: 20px;
+  font-family: 'Helvetica Neue', sans-serif;
+  fill: #ff0000;
+}
+.forecastSvg .forecastDot,
+.forecastSvg .forecastArrow {
+  fill: #ff0000;
+  stroke-width: 0px;
+}
+.pdfSvg .linePdf {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+.pdfSvg .shadedPdf {
+  fill: green;
+  stroke-width: 0px;
+  opacity: 0.4;
+}
+.lineHover {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+div.tooltip {
+  min-width: 100px;
+  text-align: left;
+  width: auto;
+  height: auto;
+  border: 1px solid #bbbbbb;
+  color: black;
+  background-color: white;
+  position: absolute;
+  font-family: Arial, Helvetical, sans-serif;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+div.tooltip .right {
+  float: right;
+  font-weight: bolder;
+}
