@@ -1,7 +1,4 @@
-node_modules
-dist
-.tmp
-.sass-cache
-app/bower_components
-*.map
+# Files and directories ignored by git
+# NOTE:  When adding, consider whether to add to .npmignore as well
+bower_components
 node_modules

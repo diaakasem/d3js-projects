@@ -10,14 +10,6 @@
       39,
       40
     ],
-    // Strike prices at which long markers should be placed along the X axis
-    "longStrikes": [
-      37
-    ],
-    // Strike prices at which short markers should be placed along the X axis
-    "shortStrikes": [
-      40
-    ],
     // X values for the points across all curves
     // Always in increasing order of X (price)
     "prices": [
@@ -538,11 +530,11 @@
         // As they are calculated over multiple charts which will share the
 	// same scale.  Their range will always include all points.
 	// Min and max will not match 
-	"minPrice": 28.5,
-	"maxPrice": 50.5,
+	"minPrice": 25.5,
+	"maxPrice": 58.2,
 	// Same behavior as price scale
-	"minPayout": -3924,
-	"maxPayout": 1576
+	"minPayout": -3985.6193,
+	"maxPayout": 1601.014982
     },
     // Information for forecast line (horizontal with axis-like styling)
     "forecastLine": {
@@ -552,15 +544,15 @@
         // Price values define the horizontal position (and extent) of the line
         // Always in increasing order of X (price)
 	"prices": [
-          36.838529314,
-          38.144264657,
-          39.45,
-          40.755735343,
-          42.061470686
+          35,
+          35.8,
+          36.6,
+          37.4,
+          38.2
 	],
         // Defines thicker segment with arrow head as indexes into prices array
-        "startPriceIndex": 0,
-        "endPriceIndex": 2,
+        "startPriceIndex": 2,
+        "endPriceIndex": 3,
         // Forecast level, for subscript of "F" label adjacent to line
         "forecastLevel": 2
     },

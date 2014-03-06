@@ -1,17 +1,13 @@
 body {
-    font-size: 16px;
+    font-size: 10px;
     font-family: 'Helvetica Neue', sans-serif;
 }
 
 .axis path,
 .axis line {
     fill: none;
-    stroke: gray;
+    stroke: #000;
     shape-rendering: crispEdges;
-}
-
-.x.axis text {
-    display: none;
 }
 
 .x.axis path {
@@ -20,26 +16,22 @@ body {
 .payoutSvg{
     .linePayout {
         fill: none;
-        stroke: black;
-        stroke-width: 5px;
+        stroke: steelblue;
+        stroke-width: 1.5px;
     }
     .shadedPayout {
-        fill: #cc9f64;
+        fill: red;
         stroke-width: 0px;
+        opacity: 0.4;
     }
 }
-.payoutCircle {
-    fill: black;
-}
 
-@forecastColor: black;
+@forecastColor: red;
 .forecastArrow{
     fill: @forecastColor;
     stroke-width: 0px;
 }
 .forecastSvg {
-    font-weight: bold;
-
     .forecastLine {
         fill: none;
         stroke: @forecastColor;
@@ -62,20 +54,18 @@ body {
 .pdfSvg {
     .linePdf {
         fill: none;
-        stroke: #0a525f;
-        stroke-width: 5px;
+        stroke: steelblue;
+        stroke-width: 1.5px;
     }
     .shadedPdf {
-        fill: #5a8f8e;
+        fill: green;
         stroke-width: 0px;
+        opacity: 0.4;
     }
-}
-.pdfCircle {
-    fill: #0a525f;
 }
 .lineHover{
         fill: none;
-        stroke: #e5e5e5;
+        stroke: steelblue;
         stroke-width: 1.5px;
 }
 
@@ -97,20 +87,6 @@ div.tooltip {
     .right{
         float: right;
         font-weight: bolder;
-        pointer-events: none;         
-    }
-    .left {
     }
 }
 
-.longTick text,
-.shortTick text {
-    fill: #5a8f8e;
-}
-
-.longTick path,
-.shortTick path {
-    fill: #5a8f8e;
-    stroke: #0a525f;
-    stroke-width: 1px;
-}

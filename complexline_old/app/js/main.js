@@ -1,8 +1,6 @@
 $(document).ready(function() {
     var configs = {
-        selector: "body div#chart",
-        height: 400,
-        width: 800
+        selector: "body div#chart"
     };
     d3.json("data/data.json", function(err, data) {
         if (err) {

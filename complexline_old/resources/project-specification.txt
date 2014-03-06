@@ -1,0 +1,126 @@
+Project Specification for Complex Line Chart of Finance Data in D3.js
+
+The chart consists of 2 curves which share a common X axis (market price of
+the underlying stock) with differing Y axes scaled independently, such that
+the curves overlay one another.  It also consists of several marks, labels,
+and lines to add additional information to the chart.  The first curve is the
+payout for a given price (in dollars).  The second is the probability
+distribution function for price.  The goal is to make it easy for anyone
+viewing the chart to visualize how the trade would perform depending on price
+and the likelihood of that price occurring.
+
+Specific requirements for the chart:
+* The chart is, fundamentally, a line chart where each consecutive point in
+  the payout curve and the probability curve are connected by straight line
+  segments, and all points are visible within the chart bounds.  The payout
+  curve must not be smoothed.  The probability curve should be smoothed, if
+  supported by D3.js.  The lines should have the CSS class "payout-line" and
+  "probability-line" respectively such that the thickness and color of the
+  lines can be defined in CSS (feel free to define colors initially as you
+  like).
+* The chart should use the Helvetica Neue font for all labels and text on
+  the graph.  Ideally the layout should provide sufficient space to
+  accommodate possible font changes in the future, but must work well with
+  Helvetica Neue.
+* An X axis placed at 0 on the payout Y axis (in the chart rather than at the
+  bottom), which includes tick marks for strike price values (included in the
+  input) and labels for 4 to 7 of the strike price values, based on available
+  space.  The strike price values may contain up to 2 decimal points of
+  precision, but are typically whole numbers; the layout will have to consider
+  this.
+* A Y axis placed at the left edge of the chart which includes labels and
+  tick marks for evenly spaced payout (dollar) values (again readability is
+  key) which is only displayed if the input to the function requests it.
+* The probability curve should be scaled to 1/3 the height of the chart
+  and placed at the bottom of the chart (it will overlap the payout curve
+  where the payout curve has highly negative values).
+* The probability curve should be filled (shaded) from the line to the bottom
+  of the chart (0 for this curve) anywhere the payout curve is positive.
+  To ease finding these points, the data for the payout curve is guaranteed to 
+  include points at any x-intercept (so this is a lookup and won't require
+  interpolation or function evaluation).
+* The probability curve should have a label in the filled (shaded) area
+  with the which displays the probability of profit as a percentage (included
+  in the input).  The label should be horizontally centered between the
+  smallest and largest price values which are positive (which may result in
+  the label being outside of the filled area if the payout transitions between
+  positive and negative multiple times - this is fine).
+* The payout curve should be filled (shaded) from the line to 0 on the Y-axis.
+* A horizontal line segment, the forecast line, should be placed at a height
+  defined by the payout value specified in the input data (in dollars, on the
+  payout curve Y axis) and extend horizontally through a set of price values
+  in the input data.  It should include tick marks and labels at each of the
+  price values, styled similarly to the X axis, and the line should not extend
+  beyond the maximum and minimum of those values.
+* Additionally, the forecast line should include a thicker line, terminated
+  with a dot at one end and an arrow head at the other, between two of the
+  points (specified in the input - not necessarily adjacent).  It should also
+  include a large/bold label at the positive end with the letter F and the
+  forecast level as a subscript (included in the input).
+* The chart should include a vertical cursor line which follows the mouse
+  (or is shown as the result of a click, for tap, on mobile devices) and
+  displays the nearest point on both the payout and probability curves to where
+  the cursor intersects each curve.  (Note:  This describes the behavior of
+  NVD3.js, which we like.  If NVD3.js is not suitable or more difficult for
+  meeting the other functionality requirements, we can work out similar
+  behavior or relax this requirement based on other libraries available.)
+* The chart should include a tooltip which roughly follows the mouse (or
+  appears at the click point, for tap, on mobile - as in NVD3.js) which has
+  the following lines, each with the label justified to the left and number
+  justified to the right:
+  - "Price" followed by the price at the hover/click point, an up or down
+    arrow if the price is above or below the forecast price (included in
+    the input), and the difference between the hover/click price and the
+    current price.
+  - "ROM" followed by a percentage calculated by dividing the payout value
+    at the hover/click point and dividing by the margin amount (included in
+    the input).
+  - "Prob >" followed by (1 - CDF(Price)), where CDF(Price) is the value from
+    the CDF data in the input at the hover/click price, formatted as a percent.
+  - "Prob <" followed by CDF(Price), where CDF(Price) is the value from
+    the CDF data in the input at the hover/click point, formatted as a percent.
+  - "SD" followed by the difference between the price at the hover/click
+    point and the forecast price (included in the input), divided by the
+    standard deviation of the price distribution (included in the input).
+* The graph must support horizontal resolutions from 320px up to 940px with
+  a constant aspect ratio.
+* The graph (and JavaScript code) must support all browsers supported by the
+  D3.js library (Firefox, Chrome, Safari, Opera, IE 9 and later) in both
+  desktop and mobile versions.
+
+Specific requirements for the code:
+* The JavaScript code must pass validation with JSHint in the default
+  configuration, with the browser and jQuery globals defined.
+* The JavaScript code may assume that jQuery ($) is already defined as a global
+  variable with the most recent version of jQuery and the code is free to use
+  jQuery.
+* The JavaScript code must work with the ES5 "use strict" pragma in effect
+  (for convenience, this may be defined at the top of the script file in
+  file scope).
+* The JavaScript code should follow good coding practices:  Minimize or
+  eliminate mutable global variables, use descriptive variable names,
+  use a consistent style, make use of efficient algorithms, and optimizes for
+  readability and maintainability by future developers.
+* The JavaScript code should make use of active third party projects where
+  appropriate to minimize the amount of code that will need to be maintained on
+  an ongoing basis.
+* The JavaSCript code should have minimal (if any) monkey-patching or
+  modification of any 3rd party libraries.  Although these sorts of invasive 
+  procedures can be required to get desired functionality without rewriting
+  large amounts of code, they increase the maintenance burden and fragility
+  significantly, particularly when upgrading the 3rd party libraries.
+
+Additional desirable features:
+* Wherever possible, visible elements of the chart should have CSS classes
+  with meaningful names to facilitate styling of the chart and ease any
+  future style changes.
+* Wherever possible, the layout and style choices should strive to make the
+  chart easily readable and understandable and visually clear to a wide variety
+  of people.  In particular, colors used on the graph should be distinct for
+  people with red-green colorblindness.
+
+The project deliverables will be a JavaScript function, and any dependencies
+of that function, which will take all required data and configuration options
+as input (in the format specified in the input-example.json file) and generate
+a line chart using D3.js (and, optionally, NVD3.js) along with any CSS rules
+to define the visual style of the chart.

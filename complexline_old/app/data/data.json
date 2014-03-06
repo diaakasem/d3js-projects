@@ -1,7 +1,5 @@
 {
-    // Should the Y axis be visible?
     "showYAxis": true,
-    // Strike prices, which define tick marks on the X axis
     "strikes": [
       35,
       36,
@@ -10,16 +8,6 @@
       39,
       40
     ],
-    // Strike prices at which long markers should be placed along the X axis
-    "longStrikes": [
-      37
-    ],
-    // Strike prices at which short markers should be placed along the X axis
-    "shortStrikes": [
-      40
-    ],
-    // X values for the points across all curves
-    // Always in increasing order of X (price)
     "prices": [
       29.0041172560013,
       30.30985259900114,
@@ -146,8 +134,6 @@
       48.59014740099887,
       49.8958827439987
     ],
-    // Y values which define the payout curve
-    // Paired with values from "prices" array to form points
     "payout": [
       -3923.161792080999,
       -3270.294120581078,
@@ -174,7 +160,6 @@
       -81.84721348482344,
       -25.83170984527533,
       -5.955763081485202,
-      // Always includes point at X-axis crossovers
       0,
       27.84466253541177,
       74.77957991835137,
@@ -275,8 +260,6 @@
       1574.779579918351,
       1574.779579918351
     ],
-    // Y values which define the probability curve
-    // Paired with values from "prices" array to form points
     "pdf": [
       0.00005124707180607503,
       0.0003341728856939848,
@@ -403,9 +386,6 @@
       0.0003341728856939848,
       0.00005124707180607503
     ],
-    // Y values which define the CDF curve (for tooltip)
-    // Paired with values from "prices" array to form points
-    // This data is not displayed as a curve in the chart
     "cdf": [
       0.00003167124183311997,
       0.0002326290790355256,
@@ -532,42 +512,26 @@
       0.9997673709209645,
       0.9999683287581669
     ],
-    // Chart scaling information
     "scale": {
-	// Price scale min and max will not match min and max of points above
-        // As they are calculated over multiple charts which will share the
-	// same scale.  Their range will always include all points.
-	// Min and max will not match 
-	"minPrice": 28.5,
-	"maxPrice": 50.5,
-	// Same behavior as price scale
-	"minPayout": -3924,
-	"maxPayout": 1576
+	"minPrice": 25.5,
+	"maxPrice": 58.2,
+	"minPayout": -3985.6193,
+	"maxPayout": 1601.014982
     },
-    // Information for forecast line (horizontal with axis-like styling)
     "forecastLine": {
-        // Payout value defines the vertical position of the line (in Y-axis
-        // units of the payout curve)
         "payout": -1000,
-        // Price values define the horizontal position (and extent) of the line
-        // Always in increasing order of X (price)
 	"prices": [
-          36.838529314,
-          38.144264657,
-          39.45,
-          40.755735343,
-          42.061470686
+          35,
+          35.8,
+          36.6,
+          37.4,
+          38.2
 	],
-        // Defines thicker segment with arrow head as indexes into prices array
-        "startPriceIndex": 0,
-        "endPriceIndex": 2,
-        // Forecast level, for subscript of "F" label adjacent to line
+        "startPriceIndex": 2,
+        "endPriceIndex": 3,
         "forecastLevel": 2
     },
-    // Forecast price for tooltip price change % calculation
     "forecast": 39.45,
-    // Standard deviation for tooltip SD calculation
     "sd": 2.611470685999675,
-    // Margin amount for tooltip ROM calculation
     "margin": 10000
 }

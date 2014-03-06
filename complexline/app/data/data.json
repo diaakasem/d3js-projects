@@ -8,6 +8,12 @@
       39,
       40
     ],
+    "longStrikes": [
+      37
+    ],
+    "shortStrikes": [
+      40
+    ],
     "prices": [
       29.0041172560013,
       30.30985259900114,
@@ -513,22 +519,22 @@
       0.9999683287581669
     ],
     "scale": {
-	"minPrice": 25.5,
-	"maxPrice": 58.2,
-	"minPayout": -3985.6193,
-	"maxPayout": 1601.014982
+	"minPrice": 28.5,
+	"maxPrice": 50.5,
+	"minPayout": -3924,
+	"maxPayout": 1576
     },
     "forecastLine": {
         "payout": -1000,
 	"prices": [
-          35,
-          35.8,
-          36.6,
-          37.4,
-          38.2
+          36.838529314,
+          38.144264657,
+          39.45,
+          40.755735343,
+          42.061470686
 	],
-        "startPriceIndex": 2,
-        "endPriceIndex": 3,
+        "startPriceIndex": 0,
+        "endPriceIndex": 2,
         "forecastLevel": 2
     },
     "forecast": 39.45,

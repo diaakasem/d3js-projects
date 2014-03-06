@@ -16,7 +16,7 @@
 
         shadingData = [];
 
-        var margin = _.extend({top: 20, right: 20, bottom: 30, left: 85}, configs.margin),
+        var margin = _.extend({top: 20, right: 20, bottom: 30, left: 50}, configs.margin),
             width = (configs.width || $(window).width()) - margin.left - margin.right,
             height = (configs.height || $(window).height()) - margin.top - margin.bottom;
 
@@ -27,15 +27,8 @@
         var pdfX = d3.scale.linear().range([0, width]);
         var pdfY = d3.scale.linear().range([height, 0]);
 
-        var payoutXAxis = d3.svg.axis()
-            .scale(payoutX)
-            .tickValues(data.strikes)
-            .orient("top")
-            .outerTickSize(0);
-        var payoutYAxis = d3.svg.axis()
-            .scale(payoutY)
-            .orient("left")
-            .outerTickSize(0);
+        var payoutXAxis = d3.svg.axis().scale(payoutX).orient("bottom");
+        var payoutYAxis = d3.svg.axis().scale(payoutY).orient("left");
 
         var pdfXAxis = d3.svg.axis().scale(pdfX).orient("bottom");
         var pdfYAxis = d3.svg.axis().scale(pdfY).orient("left");
@@ -67,12 +60,8 @@
         pdfY.domain([0, 1]);
 
         var svg = d3.select(configs.selector).append("svg")
-            .attr(
-                "viewBox",
-                "0 0 " +
-                    (width + margin.left + margin.right) + " " +
-                    (height + margin.top + margin.bottom)
-            );
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom);
 
         var mainSvg = svg.append("g")
             .attr("class", "mainSvg")
@@ -89,6 +78,31 @@
             .style('opacity', 0)
             .attr('width', payoutX(_.max(data.prices)) - payoutX(_.min(data.prices)))
             .attr('height', margin.top + height);
+
+        payoutSvg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0, " + payoutY(0) + ")")
+            .call(payoutXAxis)
+            .attr("marker-end", function(d) { return "url(#forecastArrow)"; });
+
+        payoutSvg.append("text")
+            .attr("class", "xText")
+            .attr("transform", "translate(" + width + "," + (payoutY(0) + 20) + ")")
+            .style("text-anchor", "end")
+            .text("Price (USD)");
+
+        payoutSvg.append("g")
+            .attr("class", "y axis")
+            .call(payoutYAxis)
+            .attr("marker-end", function(d) { return "url(#forecastArrow)"; });
+
+        payoutSvg.append("text")
+            .attr("class", "yText")
+            .attr("transform", "translate(0," + (height / 2) + "), rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .style("text-anchor", "center")
+            .text("Return (USD)");
 
         renderData = _.map(data.prices, function(price, i) {
             return {
@@ -132,6 +146,16 @@
             cdf: lastPoint.cdf
         });
 
+        payoutSvg.append("path")
+            .datum(renderData)
+            .attr("class", "linePayout")
+            .attr("d", linePayout);
+
+        pdfSvg.append("path")
+            .datum(renderData)
+            .attr("class", "linePdf")
+            .attr("d", linePdf);
+
         _.each(shadingData, function(points) {
 
             payoutSvg.append("path")
@@ -145,79 +169,6 @@
                 .attr("d", shadedPdf);
         });
 
-        payoutSvg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0, " + payoutY(0) + ")")
-            .call(payoutXAxis)
-            .select("path")
-            .attr("marker-end", function(d) { return "url(#axisRightArrow)"; });
-
-        payoutSvg.append("text")
-            .attr("class", "xText")
-            .attr("transform", "translate(" + width + "," + (payoutY(0) + 20) + ")")
-            .style("text-anchor", "end")
-            .text("Price (USD)");
-
-        payoutSvg.append("g")
-            .attr("class", "y axis")
-            .call(payoutYAxis)
-            .select("path")
-            .attr("marker-start", function(d) { return "url(#axisUpArrow)"; })
-            .attr("marker-end", function(d) { return "url(#axisDownArrow)"; });
-
-        payoutSvg.append("text")
-            .attr("class", "yText")
-            .attr("transform", "translate(-85," + (height / 2) + "), rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", ".71em")
-            .style("text-anchor", "middle")
-            .text("Return (USD)");
-
-        payoutSvg.append("path")
-            .datum(renderData)
-            .attr("class", "linePayout")
-            .attr("d", linePayout);
-
-        pdfSvg.append("path")
-            .datum(renderData)
-            .attr("class", "linePdf")
-            .attr("d", linePdf);
-
-        _.each(data.longStrikes, function(longStrike) {
-            var longTick = payoutSvg.append("g")
-                .attr("class", "longTick")
-                .attr("transform", "translate(" + payoutX(longStrike) + "," + (payoutY(0) - 1) + ")");
-
-            longTick.append("path")
-                // FIXME:  5 is based on size of triangle.
-                .attr("transform", "translate(0,-5)")
-                .attr("d", d3.svg.symbol().type("triangle-down"));
-
-            longTick.append("text")
-                // FIXME:  14 based on size of triangle + padding.
-                .attr("y", -14)
-                .style("text-anchor", "middle")
-                .text(longStrike.toFixed(2));
-        });
-
-        _.each(data.shortStrikes, function(shortStrike) {
-            var shortTick = payoutSvg.append("g")
-                .attr("class", "shortTick")
-                .attr("transform", "translate(" + payoutX(shortStrike) + "," + (payoutY(0) + 1) + ")");
-
-            shortTick.append("path")
-                // FIXME:  5 is based on size of triangle.
-                .attr("transform", "translate(0,5)")
-                .attr("d", d3.svg.symbol().type("triangle-up"));
-
-            shortTick.append("text")
-                // FIXME:  14 based on size of triangle + padding.
-                .attr("y", 14)
-                .attr("dy", ".71em")
-                .style("text-anchor", "middle")
-                .text(shortStrike.toFixed(2));
-        });
-
 
         /**********************************
          * Hover line and tooltip
@@ -227,26 +178,26 @@
         var lineHover = hoverLineGroup
             .append("line")
             .attr("class", "lineHover")
-            .attr("x1", 0).attr("x2", 0)
+            .attr("x1", 0).attr("x2", 0) 
             .attr("y1", margin.top).attr("y2", height + margin.top );
 
         hoverLineGroup.append('circle')
             .attr("class", "pdfCircle")
             .attr("opacity", 1)
-            .attr("r", 6)
+            .attr("r", 5)
             .attr("cx", 0)
             .attr("cy", 0);
 
         hoverLineGroup.append('circle')
             .attr("class", "payoutCircle")
             .attr("opacity", 1)
-            .attr("r", 6)
+            .attr("r", 5)
             .attr("cx", 0)
             .attr("cy", 0);
 
         var tooltip = d3.select(configs.selector)
             .append("div")
-            .attr("class", "tooltip")
+            .attr("class", "tooltip")               
             .style("opacity", 0);
 
         hoverLineGroup.style("opacity", 1e-6);
@@ -288,54 +239,38 @@
                 .style("opacity", 0);
         }
 
-        // Specialization of _.sortedIndex for performance
-        function sortedIndexPoints(price) {
-            var low = 0, high = renderData.length, mid;
-            while (low < high) {
-                /*jslint bitwise: true */
-                // Shameless performance micro-optimization
-                mid = (low + high) >>> 1;
-
-                if (renderData[mid].price < price) {
-                    low = mid + 1;
-                } else {
-                    high = mid;
+        var find = _.memoize(function (price) {
+            var begin = 0, end = renderData.length - 1;
+            var pivot, e;
+            while(true) {
+                pivot = Math.round((begin + end) / 2);
+                e = renderData[pivot];
+                if (end === pivot || begin === pivot) {
+                    break;
                 }
+                if (e.price === price) {
+                    break;
+                }
+                if (e.price < price) { begin = pivot; }
+                if (e.price > price) { end = pivot; }
             }
-            return low;
-        }
-
-        function findNearestPoint(price) {
-            var above, below, i = sortedIndexPoints(price);
-
-            if (i >= renderData.length) {
-                return renderData[i - 1];
-            }
-
-            if (i === 0) {
-                return renderData[0];
-            }
-
-            // i is index of point above price.  Check if point below is nearer.
-            above = renderData[i];
-            below = renderData[i - 1];
-            return (price - below.price < above.price - price) ?  below : above;
-        }
+            return renderData[begin];
+        });
 
         function mousemove(d) {
             if (!d3.event) {
                 return;
             }
-            var x = d3.mouse(mainSvg.node())[0];
+            var x = d3.event.pageX - margin.left - 8;
             var price = payoutX.invert(x);
-            var point = findNearestPoint(price);
+            var point = find(price);
             hoverLineGroup.attr('transform', 'translate(' + (payoutX(point.price) + margin.left) + ', 0)');
             hoverLineGroup.select(".payoutCircle").attr("cy", (payoutY(point.payout) + margin.top));
             hoverLineGroup.select(".pdfCircle").attr("cy", (pdfY(point.pdf) + margin.top));
             setTooltip(point);
 
-            tooltip.style("left", (d3.event.pageX + 10) + "px")
-            .style("top", (d3.event.pageY - 28) + "px");
+            tooltip.style("left", (d3.event.pageX) + "px")     
+            .style("top", (d3.event.pageY - 28) + "px");    
         }
 
         payoutRect.on('mousemove', mousemove)
@@ -369,10 +304,10 @@
             .y(function(d) { return forecastY; })
             .interpolate("linear");
 
-        var defs = svg.append("defs");
-
-        defs.append("marker")
-            .attr("id", "forecastArrow")
+        svg.append("defs").selectAll("marker")
+            .data(["forecastArrow"])
+            .enter().append("marker")
+            .attr("id", function(d) { return d; })
             .attr("viewBox", "0 -5 10 10")
             .attr("refX", 8)
             .attr("refY", 0)
@@ -381,44 +316,6 @@
             .attr("orient", "auto")
             .append("path")
             .attr("class", 'forecastArrow')
-            .attr("d", "M0,-5L10,0L0,5L2.5,0");
-
-        // Need a separate marker in order to color differently
-        // http://stackoverflow.com/a/16665510
-        defs.append("marker")
-            .attr("id", "axisRightArrow")
-            .attr("viewBox", "0 -5 10 10")
-            .attr("refX", 4)
-            .attr("refY", 0)
-            .attr("markerWidth", 12)
-            .attr("markerHeight", 9)
-            .attr("orient", "0")
-            .append("path")
-            .attr("class", 'axisArrow')
-            .attr("d", "M0,-5L10,0L0,5L2.5,0");
-
-        defs.append("marker")
-            .attr("id", "axisUpArrow")
-            .attr("viewBox", "0 -5 10 10")
-            .attr("refX", 4)
-            .attr("refY", 0)
-            .attr("markerWidth", 12)
-            .attr("markerHeight", 9)
-            .attr("orient", "270")
-            .append("path")
-            .attr("class", 'axisArrow')
-            .attr("d", "M0,-5L10,0L0,5L2.5,0");
-
-        defs.append("marker")
-            .attr("id", "axisDownArrow")
-            .attr("viewBox", "0 -5 10 10")
-            .attr("refX", 4)
-            .attr("refY", 0)
-            .attr("markerWidth", 12)
-            .attr("markerHeight", 9)
-            .attr("orient", "90")
-            .append("path")
-            .attr("class", 'axisArrow')
             .attr("d", "M0,-5L10,0L0,5L2.5,0");
 
         forecastSvg.append("g")
@@ -434,7 +331,7 @@
 
         forecastSvg.append("circle")
             .attr("class", "forecastDot")
-            .attr("r", '5')
+            .attr("r", '5')       
             .attr("cx", forecastX(data.forecastLine.prices[data.forecastLine.startPriceIndex]))
             .attr("cy", forecastY);
 
@@ -450,4 +347,4 @@
             .attr("y", forecastY + 16)
             .text(data.forecastLine.forecastLevel);
     };
-}(window));
+}).call(null, window);
