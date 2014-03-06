@@ -8,75 +8,95 @@ body {
     fill: none;
     stroke: gray;
     shape-rendering: crispEdges;
+    pointer-events: none;         
 }
 
 .x.axis text {
     display: none;
+    pointer-events: none;         
 }
 
 .x.axis path {
+    pointer-events: none;         
 }
 
 .payoutSvg{
+    .xText{
+        pointer-events: none;         
+    }
     .linePayout {
         fill: none;
         stroke: black;
         stroke-width: 5px;
+        pointer-events: none;         
     }
     .shadedPayout {
         fill: #cc9f64;
+        pointer-events: none;         
         stroke-width: 0px;
     }
 }
 .payoutCircle {
     fill: black;
+    pointer-events: none;         
 }
 
 @forecastColor: black;
 .forecastArrow{
     fill: @forecastColor;
     stroke-width: 0px;
+    pointer-events: none;         
 }
 .forecastSvg {
     font-weight: bold;
+    pointer-events: none;         
 
     .forecastLine {
         fill: none;
         stroke: @forecastColor;
         stroke-width: 3px;
+        pointer-events: none;         
     }
     .forecastSubText {
         fill: @forecastColor;
+        pointer-events: none;         
     }
     .forecastText {
         font-size: 20px;
         font-family: 'Helvetica Neue', sans-serif;
         fill: @forecastColor;
+        pointer-events: none;         
     }
     .forecastDot, .forecastArrow{
         fill: @forecastColor;
         stroke-width: 0px;
+        pointer-events: none;         
     }
 }
 
 .pdfSvg {
+    pointer-events: none;         
     .linePdf {
         fill: none;
         stroke: #0a525f;
+        pointer-events: none;         
         stroke-width: 5px;
     }
     .shadedPdf {
         fill: #5a8f8e;
         stroke-width: 0px;
+        pointer-events: none;         
     }
 }
 .pdfCircle {
     fill: #0a525f;
+    pointer-events: none;         
 }
 .lineHover{
-        fill: none;
-        stroke: #e5e5e5;
-        stroke-width: 1.5px;
+    fill: none;
+    stroke: #e5e5e5;
+    stroke-width: 1.5px;
+    pointer-events: none;         
 }
 
 div.tooltip {   
@@ -100,12 +120,14 @@ div.tooltip {
         pointer-events: none;         
     }
     .left {
+        pointer-events: none;         
     }
 }
 
 .longTick text,
 .shortTick text {
     fill: #5a8f8e;
+    pointer-events: none;         
 }
 
 .longTick path,
@@ -113,4 +135,5 @@ div.tooltip {
     fill: #5a8f8e;
     stroke: #0a525f;
     stroke-width: 1px;
+    pointer-events: none;         
 }

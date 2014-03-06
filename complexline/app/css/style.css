@@ -7,63 +7,87 @@ body {
   fill: none;
   stroke: gray;
   shape-rendering: crispEdges;
+  pointer-events: none;
 }
 .x.axis text {
   display: none;
+  pointer-events: none;
+}
+.x.axis path {
+  pointer-events: none;
+}
+.payoutSvg .xText {
+  pointer-events: none;
 }
 .payoutSvg .linePayout {
   fill: none;
   stroke: black;
   stroke-width: 5px;
+  pointer-events: none;
 }
 .payoutSvg .shadedPayout {
   fill: #cc9f64;
+  pointer-events: none;
   stroke-width: 0px;
 }
 .payoutCircle {
   fill: black;
+  pointer-events: none;
 }
 .forecastArrow {
   fill: #000000;
   stroke-width: 0px;
+  pointer-events: none;
 }
 .forecastSvg {
   font-weight: bold;
+  pointer-events: none;
 }
 .forecastSvg .forecastLine {
   fill: none;
   stroke: #000000;
   stroke-width: 3px;
+  pointer-events: none;
 }
 .forecastSvg .forecastSubText {
   fill: #000000;
+  pointer-events: none;
 }
 .forecastSvg .forecastText {
   font-size: 20px;
   font-family: 'Helvetica Neue', sans-serif;
   fill: #000000;
+  pointer-events: none;
 }
 .forecastSvg .forecastDot,
 .forecastSvg .forecastArrow {
   fill: #000000;
   stroke-width: 0px;
+  pointer-events: none;
+}
+.pdfSvg {
+  pointer-events: none;
 }
 .pdfSvg .linePdf {
   fill: none;
   stroke: #0a525f;
+  pointer-events: none;
   stroke-width: 5px;
 }
 .pdfSvg .shadedPdf {
   fill: #5a8f8e;
   stroke-width: 0px;
+  pointer-events: none;
 }
 .pdfCircle {
   fill: #0a525f;
+  pointer-events: none;
 }
 .lineHover {
   fill: none;
   stroke: #e5e5e5;
   stroke-width: 1.5px;
+  pointer-events: none;
 }
 div.tooltip {
   min-width: 100px;
@@ -82,14 +106,20 @@ div.tooltip {
 div.tooltip .right {
   float: right;
   font-weight: bolder;
+  pointer-events: none;
+}
+div.tooltip .left {
+  pointer-events: none;
 }
 .longTick text,
 .shortTick text {
   fill: #5a8f8e;
+  pointer-events: none;
 }
 .longTick path,
 .shortTick path {
   fill: #5a8f8e;
   stroke: #0a525f;
   stroke-width: 1px;
+  pointer-events: none;
 }
