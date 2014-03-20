@@ -1,0 +1,132 @@
+body {
+  font-size: 16px;
+  font-family: 'Helvetica Neue', sans-serif;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: gray;
+  shape-rendering: crispEdges;
+  pointer-events: none;
+}
+.x.axis text {
+  display: none;
+  pointer-events: none;
+}
+.x.axis path {
+  pointer-events: none;
+}
+.payoutSvg .xText {
+  pointer-events: none;
+}
+.payoutSvg .linePayout {
+  fill: none;
+  stroke: black;
+  stroke-width: 5px;
+  pointer-events: none;
+}
+.payoutSvg .shadedPayout {
+  fill: #cc9f64;
+  pointer-events: none;
+  stroke-width: 0px;
+}
+.payoutCircle {
+  fill: black;
+  pointer-events: none;
+}
+.forecastArrow {
+  fill: #000000;
+  stroke-width: 0px;
+  pointer-events: none;
+}
+.forecastSvg {
+  font-weight: bold;
+  pointer-events: none;
+}
+.forecastSvg .forecastLine {
+  fill: none;
+  stroke: #000000;
+  stroke-width: 3px;
+  pointer-events: none;
+}
+.forecastSvg .forecastSubText {
+  fill: #000000;
+  pointer-events: none;
+}
+.forecastSvg .forecastText {
+  font-size: 20px;
+  font-family: 'Helvetica Neue', sans-serif;
+  fill: #000000;
+  pointer-events: none;
+}
+.forecastSvg .forecastDot,
+.forecastSvg .forecastArrow {
+  fill: #000000;
+  stroke-width: 0px;
+  pointer-events: none;
+}
+div.tooltip {
+  min-width: 100px;
+  text-align: left;
+  width: auto;
+  height: auto;
+  border: 1px solid #bbbbbb;
+  color: black;
+  background-color: white;
+  position: absolute;
+  font-family: Arial, Helvetical, sans-serif;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+div.tooltip .right {
+  float: right;
+  font-weight: bolder;
+  pointer-events: none;
+}
+div.tooltip .left {
+  pointer-events: none;
+}
+.longTick text,
+.shortTick text {
+  fill: #5a8f8e;
+  pointer-events: none;
+}
+.longTick path,
+.shortTick path {
+  fill: #5a8f8e;
+  stroke: #0a525f;
+  stroke-width: 1px;
+  pointer-events: none;
+}
+circle {
+  opacity: 0.8;
+}
+.put-19-volume-point {
+  fill: #A66F00;
+  pointer-events: none;
+}
+.put-20-volume-point {
+  fill: #FFAA00;
+  pointer-events: none;
+}
+.put-21-volume-point {
+  fill: #FFD073;
+  pointer-events: none;
+}
+.call-19-volume-point {
+  fill: #5CCCCC;
+  pointer-events: none;
+}
+.call-20-volume-point {
+  fill: #009999;
+  pointer-events: none;
+}
+.call-21-volume-point {
+  fill: #006363;
+  pointer-events: none;
+}
+.underlying-price-point {
+  fill: #BF3030;
+  pointer-events: none;
+}

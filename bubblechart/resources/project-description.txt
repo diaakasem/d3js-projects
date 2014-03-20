@@ -1,0 +1,21 @@
+Bubble Chart of Finance Data in D3.js
+
+We are looking for an expert in data visualization with D3.js to help us
+refine and implement a bubble chart/scatter plot which describes the price of
+an underlying and the trade volume of options on the underlying at various
+strike prices over time.  The goal is to make it easy for anyone viewing the
+chart to visualize the price volatility of the underlying and market activity
+on the options related to that volatility.
+
+This project is to write a JavaScript function, and any dependencies of that
+function, which will take all required data and configuration options as input
+and generate a line chart using D3.js (and, optionally, NVD3.js).  The
+deliverable will be the JavaScript function, any dependency code on which it
+relies, and any CSS rules to define the visual style of the chart.
+
+Broadly, the line chart will consist of a primary curve and multiple overlayed
+secondary curves with differing Y-axes and several labels and marks to convey
+additional information through the chart.
+
+We have a detailed specification of our current design for the chart available
+to share with potential applicants.
