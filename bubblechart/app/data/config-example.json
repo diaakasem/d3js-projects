@@ -2,5 +2,8 @@
   "width": 800,
   "height": 400,
   "volumeHeight": 50,
-  "selector": "#chart"
+  "selector": "#chart",
+  "useOptionPrice": true,
+  "optionVolumeScale": 0.1,
+  "default_radius": 15
 }

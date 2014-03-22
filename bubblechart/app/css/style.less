@@ -12,18 +12,49 @@ body {
 }
 
 .x.axis text {
-    display: none;
     pointer-events: none;         
+    stroke-width: 0;
+    font-size: 12px;
 }
 
 .x.axis path {
     pointer-events: none;         
 }
 
-.payoutSvg{
-    .xText{
+.x.axis.call {
+    pointer-events: none;         
+    stroke: grey;
+    stroke-width: 1px;
+    fill: grey;
+}
+
+.text-svg {
+    * {
         pointer-events: none;         
+        font-family: 'Helvetica Neue';
+        fill: black;
+    } 
+    .underlying-text{
+        font-size: 25px;
     }
+    .underlying-company-name-text{
+        font-size: 12px;
+    }
+    .time-text{
+        font-size: 12px;
+    }
+    .daily-price-text{
+        font-size: 18px;
+    }
+    .daily-price-change-text{
+        font-size: 18px;
+    }
+    .strike-text{
+        font-size: 12px;
+    }
+}
+
+.payoutSvg{
     .linePayout {
         fill: none;
         stroke: black;

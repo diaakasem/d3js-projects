@@ -1,0 +1,17 @@
+{
+  // Width of the SVG element, in pixels
+  "width": 800,
+  // Height of the SVG element, in pixels
+  "height": 400,
+  // Height of the put and call option volume curves, in pixels
+  "volumeHeight": 50,
+  // Selector for target element in which the SVG will be placed
+  "selector": "#chart",
+  // Should the option price be used to determine the vertical position
+  // of the option points?
+  // When false the volume is used for both size and positioning.
+  "useOptionPrice": true,
+  // Scale used to determine the size of the option points.
+  // This value is pixels/unit volume.  (This value is just a guess.)
+  "optionVolumeScale": 0.1
+}

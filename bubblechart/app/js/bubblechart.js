@@ -1,7 +1,7 @@
 (function(global) {
 
     "use strict";
-    var mainPoints, callPoints, putPoints, forecastData, shadingData;
+    var mainPoints, callPoints, putPoints, forecastData, shadingData, radius;
 
     function pointsFor(x, y, r, points, svg, cssClass) {
         var circles = svg.append("g").attr("class", "points");
@@ -12,7 +12,60 @@
             .attr("class", cssClass)
             .attr("r", function(d) { return r(d.volume); })
             .attr("cx", function(d) { return x(d.time); })
-            .attr("cy", function(d) { return y(d.price); });
+            .attr("cy", function(d) { return _.isFunction(y) ? y(d.price) : d.y; });
+    }
+
+    function downArrow(svg, x, y, width, height) {
+
+        var w = (width / 2);
+        var h = (height / 2);
+        var startX = x - w;
+        var startY = y - h;
+        var data = [
+        {x: startX + (w/2), y: startY},
+        {x: startX + width - (w/2), y: startY},
+        {x: startX + width - (w/2), y: startY + height - (height / 3)},
+        {x: startX + width, y: startY + height - (height / 3)},
+        {x: x, y: startY + height},
+        {x: startX, y: startY + height - (height / 3)},
+        {x: startX + (w/2), y: startY + height - (height / 3)},
+        {x: startX + (w/2), y: startY}
+        ];
+
+        var lineFunction = d3.svg.line()
+            .x(function(d) { return d.x; })
+            .y(function(d) { return d.y; })
+            .interpolate("linear");
+
+        svg.append("path")
+            .attr("d", lineFunction(data))
+            .attr("fill", "black");
+    }
+
+    function upArrow(svg, x, y, width, height) {
+        var w = (width / 2);
+        var h = (height / 2);
+        var startX = x - w;
+        var startY = y + h;
+        var data = [
+        {x: startX + (w/2), y: startY},
+        {x: startX + width - (w/2), y: startY},
+        {x: startX + width - (w/2), y: startY - height + (height / 3)},
+        {x: startX + width, y: startY - height + (height / 3)},
+        {x: x, y: startY - height},
+        {x: startX, y: startY - height + (height / 3)},
+        {x: startX + (w/2), y: startY - height + (height / 3)},
+        {x: startX + (w/2), y: startY}
+        ];
+
+        var lineFunction = d3.svg.line()
+            .x(function(d) { return d.x; })
+            .y(function(d) { return d.y; })
+            .interpolate("linear");
+
+        svg.append("path")
+            .attr("d", lineFunction(data))
+            .attr("fill", "black");
     }
 
     /**
@@ -27,40 +80,88 @@
         }
 
         // Adding defaults to the configs
-        _.defaults(configs || {}, {width: $(window).width(), height: $(window).height()});
-        var margin = _.defaults(configs.margins || {}, {top: 20, right: 20, bottom: 20, left: 20});
+        _.defaults(configs || {}, {
+            width: $(window).width(),
+            height: $(window).height(),
+            strikes_mode: false,
+            default_radius: 10,
+            optionVolumeScale: 0.1
+        });
+
+        var margin = _.defaults(configs.margins || {}, {
+            top: 20,
+            right: 20,
+            bottom: 20,
+            left: 20
+        });
+
+        // Declaring data and adding defaults
         var width = configs.width - margin.left - margin.right,
-            height = configs.height - margin.top - margin.bottom;
+            height = configs.height - margin.top - margin.bottom,
+            strikesMode = !configs.useOptionPrice,
+            radius = configs.default_radius,
+            optionVolumeScale = configs.optionVolumeScale,
+            x, y, r;
 
         if (_.isUndefined(configs.selector)){
             throw "Please, set the selector where the graph should show up.";
         }
 
-        var x = d3.scale.linear().range([margin.left, width - margin.right]);
-        var y = d3.scale.linear().range([height - margin.bottom, margin.top]);
-        // max radius is 20px
-        var r = d3.scale.linear().range([0, 10]);
+        // Defining limits
+        var xStart = _.min(data.times);
+        var xEnd = _.max(data.times);
+        var minPrice = _.min(data.prices);
+        var maxPrice = _.max(data.prices);
+        var strikeMinPrice = minPrice;
+        var strikeMaxPrice = maxPrice;
+
+        _.each(data.callPricesByStrike, function(option, key) {
+            var strike = parseInt(key, 10);
+            if (strike < minPrice || strike > maxPrice) {
+                return;
+            }
+            strikeMaxPrice = Math.max(strikeMaxPrice, _.max(option.price) + strike);
+        });
+
+        _.each(data.putPricesByStrike, function(option, key) {
+            var strike = parseInt(key, 10);
+            if (strike < minPrice || strike > maxPrice) {
+                return;
+            }
+            strikeMinPrice = Math.min(strikeMinPrice, strike - _.min(option.price));
+        });
+
+        // Creating scales and Axises
+        x = d3.scale.linear().range([margin.left, width - margin.right]);
+        y = d3.scale.linear().range([height - margin.bottom, margin.top]);
+        r = d3.scale.linear().range([0, radius]);
 
         var xAxis = d3.svg.axis()
             .scale(x)
-            .tickValues(data.strikes)
-            .orient("top")
-            .outerTickSize(0);
+            .orient("bottom")
+            .tickFormat(function(d) {
+                return moment(d).format("HH:mm");
+            });
 
         var yAxis = d3.svg.axis()
             .scale(y)
             .orient("left")
             .outerTickSize(0);
 
-        x.domain([_.min(data.times), _.max(data.times)]);
-        y.domain([_.min(data.prices) - 2, _.max(data.prices) + 2]);
-        r.domain([_.min(data.volume), _.max(data.volume)]);
+        x.domain([xStart, xEnd]);
+        y.domain([Math.floor(strikeMinPrice), Math.ceil(strikeMaxPrice)]);
+        r.domain([0, _.max(data.volume)]);
 
         var svg = d3.select(configs.selector).append("svg")
-            .attr("viewBox", "0 0 " + configs.width + " " + configs.height);
+            .attr("viewBox", "0 0 " + configs.width + " " + configs.height)
+            .attr("xmlns","http://www.w3.org/2000/svg");
 
         var mainSvg = svg.append("g")
             .attr("class", "mainSvg")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var textSvg = svg.append("g")
+            .attr("class", "text-svg")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         mainPoints = _.map(data.prices, function(price, i) {
@@ -78,120 +179,143 @@
             .select("path")
             .attr("marker-end", function(d) { return "url(#axisRightArrow)"; });
 
-        pointsFor(x, y, r, mainPoints, svg, 'underlying-price-point');
+        pointsFor(x, y, r, mainPoints, mainSvg, 'underlying-price-point');
 
         _.each(data.callPricesByStrike, function(value, key) {
             var strike = parseInt(key, 10);
-            var callY = d3.scale.linear().range([y(strike), y(strike + 1)]);
-            callY.domain([_.min(value.price), _.max(value.price)]);
-            var callPoints = _.map(value.price, function(price, i) {
+            var callY = y;
+
+            if (strike < minPrice || strike > maxPrice) {
+                return;
+            }
+
+            if (strikesMode) {
+                callY = null;
+            }
+
+            var callPoints = _.compact(_.map(value.price, function(price, i) {
+                var volume = value.volume[i] / optionVolumeScale;
+                price = strike + price;
+                if (price < strikeMinPrice || price > strikeMaxPrice) {
+                    return null;
+                }
                 return {
                     price: price,
                     time: value.time[i],
-                    volume: data.volume[i] || 100  // TODO: CHECK VOLUME WITH KEVIN
+                    volume: volume,
+                    y: y(strike) + r(volume)
                 };
-            });
+            }));
+
+            if (!callPoints.length) {
+                return;
+            }
+
+            mainSvg.append("line")
+                .attr("class", "x axis call")
+                .attr("x1", x(xStart))
+                .attr("y1", y(strike))
+                .attr("x2", x(xEnd))
+                .attr("y2", y(strike));
+
             var css = 'call-' + strike + '-volume-point';
-            pointsFor(x, callY, r, callPoints, svg, css);
+            pointsFor(x, callY, r, callPoints, mainSvg, css, strike);
 
-            var callXAxis = d3.svg.axis()
-                .scale(x)
-                .tickValues(data.strikes)
-                .orient("top")
-                .outerTickSize(0);
-
-            mainSvg.append("g")
-                .attr("class", "x axis put")
-                .attr("transform", "translate(0, " + y(strike) + ")")
-                .call(callXAxis)
-                .select("path")
-                .attr("marker-end", function(d) { return "url(#axisRightArrow)"; });
+            textSvg.append("text")
+                .attr("class", "strike-text")
+                .attr("transform", "translate(" + (x(xStart) - 20) + ", " + (y(strike) + 5) + ")")
+                .style("text-anchor", "start")
+                .text(strike);
         });
 
         _.each(data.putPricesByStrike, function(value, key) {
             var strike = parseInt(key, 10);
-            var putY = d3.scale.linear().range([y(strike), y(strike - 1)]);
-            putY.domain([_.min(value.price), _.max(value.price)]);
-            var putPoints = _.map(value.price, function(price, i) {
+            var putY = y;
+
+            if (strike < minPrice || strike > maxPrice) {
+                return;
+            }
+
+            if (strikesMode) {
+                putY = null;
+            }
+
+            var putPoints = _.compact(_.map(value.price, function(price, i) {
+                var volume = value.volume[i] / optionVolumeScale;
+                price = strike - price;
+                if (price < strikeMinPrice || price > strikeMaxPrice) {
+                    return null;
+                }
                 return {
                     price: price,
                     time: value.time[i],
-                    volume: data.volume[i] || 100  // TODO: CHECK VOLUME WITH KEVIN
+                    volume: volume,
+                    y: y(strike) - r(volume)
                 };
-            });
+            }));
+
+            if (!putPoints.length) {
+                return;
+            }
+
             var css = 'put-' + strike + '-volume-point';
-            pointsFor(x, putY, r, putPoints, svg, css);
-
-            var putXAxis = d3.svg.axis()
-                .scale(x)
-                .tickValues(data.strikes)
-                .orient("top")
-                .outerTickSize(0);
-
-            mainSvg.append("g")
-                .attr("class", "x axis put")
-                .attr("transform", "translate(0, " + y(strike) + ")")
-                .call(putXAxis)
-                .select("path")
-                .attr("marker-end", function(d) { return "url(#axisRightArrow)"; });
+            pointsFor(x, putY, r, putPoints, mainSvg, css, strike);
         });
 
+        textSvg.append("text")
+            .attr("class", "underlying-text")
+            .attr("transform", "translate(" + x(xStart) + ", 0)")
+            .style("text-anchor", "start")
+            .text(data.underlying);
 
-        //payoutSvg.append("text")
-            //.attr("class", "xText")
-            //.attr("transform", "translate(" + width + "," + (payoutY(0) + 20) + ")")
-            //.style("text-anchor", "end")
-            //.text("Price (USD)");
+        textSvg.append("text")
+            .attr("class", "underlying-company-name-text")
+            .attr("transform", "translate(" + x(xStart) + ", 15)")
+            .style("text-anchor", "start")
+            .text(data.underlyingCompanyName);
 
-        //mainSvg.append("text")
-            //.attr("class", "yText")
-            //.attr("transform", "translate(-85," + (height / 2) + "), rotate(-90)")
-            //.attr("y", 6)
-            //.attr("dy", ".71em")
-            //.style("text-anchor", "middle")
-            //.text("Return (USD)");
+        textSvg.append("text")
+            .attr("class", "time-text")
+            .attr("transform", "translate(" + x(xEnd) + ", 0)")
+            .style("text-anchor", "end")
+            .text(moment(data.time).format('HH:mm:ss'));
 
-            // TEXT
-        //_.each(data.longStrikes, function(longStrike) {
-            //var longTick = payoutSvg.append("g")
-                //.attr("class", "longTick")
-                //.attr("transform", "translate(" + payoutX(longStrike) + "," + (payoutY(0) - 1) + ")");
+        textSvg.append("text")
+            .attr("class", "daily-price-text")
+            .attr("transform", "translate(" + (x((xStart + xEnd) / 2.0) - 10) + ", 0)")
+            .style("text-anchor", "end")
+            .text(data.price);
 
-            //longTick.append("path")
-                //.attr("transform", "translate(0,-5)")
-                //.attr("d", d3.svg.symbol().type("triangle-down"));
+        textSvg.append("text")
+            .attr("class", "daily-price-change-text")
+            .attr("transform", "translate(" + (x((xStart + xEnd) / 2.0) + 10) + ", 0)")
+            .style("text-anchor", "start")
+            .text(data.priceChange);
 
-            //longTick.append("text")
-                //.attr("y", -14)
-                //.style("text-anchor", "middle")
-                //.text(longStrike.toFixed(2));
-        //});
+        if (data.priceChange < 0 ) {
+            downArrow(textSvg, x((xStart + xEnd) / 2.0), 0, 8, 20);
+        } else { 
+            upArrow(textSvg, x((xStart + xEnd) / 2.0), 0, 8, 20);
+        }
 
-        //_.each(data.shortStrikes, function(shortStrike) {
-            //var shortTick = payoutSvg.append("g")
-                //.attr("class", "shortTick")
-                //.attr("transform", "translate(" + payoutX(shortStrike) + "," + (payoutY(0) + 1) + ")");
+         // Lower table
+        var body = textSvg.append("foreignObject")
+            .attr("class", "footer-text")
+            .attr("x", x(xStart))
+            .attr("y", height - 200)
+            .attr("width", width - margin.left - margin.right)
+            .attr("height", 200);
 
-            //shortTick.append("path")
-                //.attr("transform", "translate(0,5)")
-                //.attr("d", d3.svg.symbol().type("triangle-up"));
+        body.append("xhtml:div")
+            .text("&Delta;t = 60 minutes");
+        body.append("xhtml:div")
+            .text("IV = 60 minutes");
+        body.append("xhtml:div")
+            .text("&Delta;t = 60 minutes");
+        body.append("xhtml:div")
+            .text("&Delta;t = 60 minutes");
 
-            //shortTick.append("text")
-                //.attr("y", 14)
-                //.attr("dy", ".71em")
-                //.style("text-anchor", "middle")
-                //.text(shortStrike.toFixed(2));
-        //});
-
-        //var forecastX = d3.scale.linear().range([payoutX(forecastMinPrice), payoutX(forecastMaxPrice)]);
-        //forecastX.domain([forecastMinPrice, forecastMaxPrice]);
-        //var forecastXAxis = d3.svg.axis().scale(forecastX).orient("bottom");
-        //forecastXAxis.tickValues(data.forecastLine.prices);
-        //var lineForecast = d3.svg.line()
-            //.x(function(d) { return forecastX(d.price); })
-            //.y(function(d) { return forecastY; })
-            //.interpolate("linear");
-
+        
         var defs = svg.append("defs");
 
         defs.append("marker")
