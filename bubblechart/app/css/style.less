@@ -28,17 +28,17 @@ body {
     fill: grey;
 }
 
-.text-svg {
+.header-svg {
     * {
         pointer-events: none;         
         font-family: 'Helvetica Neue';
         fill: black;
     } 
     .underlying-text{
-        font-size: 25px;
+        font-size: 38px;
     }
     .underlying-company-name-text{
-        font-size: 12px;
+        font-size: 16px;
     }
     .time-text{
         font-size: 12px;
@@ -49,7 +49,21 @@ body {
     .daily-price-change-text{
         font-size: 18px;
     }
+}
+
+.main-svg {
+    * {
+        pointer-events: none;         
+        font-family: 'Helvetica Neue';
+        fill: black;
+    } 
     .strike-text{
+        font-size: 14px;
+    }
+    .mean-value-text {
+        font-size: 14px;
+    }
+    .mean-text {
         font-size: 12px;
     }
 }
@@ -144,7 +158,7 @@ div.tooltip {
 }
 
 circle {
-    opacity: 0.8;
+    opacity: 0.6;
 }
 
 .put-19-volume-point {
@@ -181,5 +195,14 @@ circle {
 .underlying-price-point {
     fill: #BF3030;
     pointer-events: none;
+}
+
+.first-row, .second-row {
+    text-align: right;
+    >span {
+        text-align: right;
+        min-width: 150px;
+        display: inline-block;
+    }
 }
 

@@ -23,27 +23,38 @@ body {
   stroke-width: 1px;
   fill: grey;
 }
-.text-svg * {
+.header-svg * {
   pointer-events: none;
   font-family: 'Helvetica Neue';
   fill: black;
 }
-.text-svg .underlying-text {
-  font-size: 25px;
+.header-svg .underlying-text {
+  font-size: 38px;
 }
-.text-svg .underlying-company-name-text {
+.header-svg .underlying-company-name-text {
+  font-size: 16px;
+}
+.header-svg .time-text {
   font-size: 12px;
 }
-.text-svg .time-text {
-  font-size: 12px;
-}
-.text-svg .daily-price-text {
+.header-svg .daily-price-text {
   font-size: 18px;
 }
-.text-svg .daily-price-change-text {
+.header-svg .daily-price-change-text {
   font-size: 18px;
 }
-.text-svg .strike-text {
+.main-svg * {
+  pointer-events: none;
+  font-family: 'Helvetica Neue';
+  fill: black;
+}
+.main-svg .strike-text {
+  font-size: 14px;
+}
+.main-svg .mean-value-text {
+  font-size: 14px;
+}
+.main-svg .mean-text {
   font-size: 12px;
 }
 .payoutSvg .linePayout {
@@ -127,7 +138,7 @@ div.tooltip .left {
   pointer-events: none;
 }
 circle {
-  opacity: 0.8;
+  opacity: 0.6;
 }
 .put-19-volume-point {
   fill: #A66F00;
@@ -156,4 +167,14 @@ circle {
 .underlying-price-point {
   fill: #BF3030;
   pointer-events: none;
+}
+.first-row,
+.second-row {
+  text-align: right;
+}
+.first-row > span,
+.second-row > span {
+  text-align: right;
+  min-width: 150px;
+  display: inline-block;
 }

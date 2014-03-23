@@ -4,6 +4,6 @@
   "volumeHeight": 50,
   "selector": "#chart",
   "useOptionPrice": true,
-  "optionVolumeScale": 0.1,
-  "default_radius": 15
+  "optionVolumeScale": 0.03,
+  "default_radius": 10
 }
