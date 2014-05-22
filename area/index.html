@@ -1,62 +1,57 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <meta charset="utf-8">
     <script src="d3.v3.min.js"></script>
     <script src="d3-tip-master/index.js"></script>
     <script src="jquery-1.11.0.min.js"></script>
-</head>
-<body>
-<div class="vis" style="width:890px;margin:0 auto;"></div>
-<link rel="stylesheet" href="example-styles.css">
-<style>
-    .axis path, .axis line {
-        fill: none;
-        stroke: #000;
-        shape-rendering: crispEdges;
-    }
-    .axis text {
-        font-size:11px;
-    }
+    <script src="lodash.js"></script>
+  </head>
+  <body>
 
-    .bar {
-        fill: steelblue;
-        fill-opacity: .9;
-    }
+    <section>
+    <header>
+    <h1> Remove Client </h1>
+    </header>
+    <div>
+      <select id="clients" name="clients">
+      </select>
+    </div>
+    <div>
+      <button id="select_client"> Remove </button>
+    </div>
+    </section>
 
-    .x.axis path {
-        display: none;
-    }
+    <section>
+    <header>
+    <h1> Add Client </h1>
+    </header>
+    <form>
+      <div class="fields">
+      Name: <input type="text" name="name" id="name">
+      Date: <input type="date" name="date" id="date">
+      Type: 
+      <select id="type" name="type">
+        <option value="Monthly">Monthly</option>
+        <option value="Setup">Setup</option>
+      </select>
+      Amount: <input type="number" name="amount" id="amount">
+    </div>
+      <div class="controls">
+        <input type="submit" value="Add">
+        <input type="reset">
+      </div>
+    </form>
+    </section>
 
-    .d3-tip {
-      line-height: 1;
-      font-weight: bold;
-      padding: 12px;
-      background: rgba(0, 0, 0, 0.8);
-      color: #fff;
-      border-radius: 2px;
-    }
+    <section>
+    <div class="vis" style="width:890px;margin:0 auto;"></div>
+    </section>
 
-    /* Creates a small triangle extender for the tooltip */
-    .d3-tip:after {
-      box-sizing: border-box;
-      display: inline;
-      font-size: 10px;
-      width: 100%;
-      line-height: 1;
-      color: rgba(0, 0, 0, 0.8);
-      content: "\25BC";
-      position: absolute;
-      text-align: center;
-    }
-
-    /* Style northward tooltips differently */
-    .d3-tip.n:after {
-      margin: -1px 0 0 0;
-      top: 100%;
-      left: 0;
-    }
-</style>
-<script src="main.js"></script>
-</body>
+    <link rel="stylesheet" href="example-styles.css">
+    <link rel="stylesheet" href="main.css">
+    <script src="data.js"></script>
+    <script src="main.js"></script>
+    <script src="clients.js"></script>
+  </body>
 </html>
