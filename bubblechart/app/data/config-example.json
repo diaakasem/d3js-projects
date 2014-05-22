@@ -3,7 +3,7 @@
   "height": 400,
   "volumeHeight": 50,
   "selector": "#chart",
-  "useOptionPrice": true,
+  "useOptionPrice": false,
   "optionVolumeScale": 0.03,
   "default_radius": 10
 }
