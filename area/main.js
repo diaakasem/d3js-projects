@@ -218,7 +218,7 @@
                 return 'w';
             }
             return 'n';
-        })
+        });
 
         vis.call(tip);
 
