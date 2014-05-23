@@ -284,6 +284,11 @@
                 .attr("class", "dot")
                 .attr("cx", function (d) { return x(d.date); })
                 .attr("cy", function (d) { return y(0); })
+                .attr("r", 0)
+                .on('mouseover', tip.show)
+                .on('mouseout', tip.hide)
+                .transition()
+                .duration(2000)
                 .attr("r", function (d) {
                     if ((d.y0 + d.y) > 0) {
                         return 2;
@@ -291,10 +296,6 @@
                         return 0;
                     }
                 })
-                .on('mouseover', tip.show)
-                .on('mouseout', tip.hide)
-                .transition()
-                .duration(2000)
                 .attr("cy", function (d) {
                     return y(d.y0 + d.y);
                 })
@@ -305,6 +306,13 @@
             vis.selectAll("circle").data(data)
                 .transition()
                 .duration(2000)
+                .attr("r", function (d) {
+                    if ((d.y0 + d.y) > 0) {
+                        return 2;
+                    } else {
+                        return 0;
+                    }
+                })
                 .attr("cy", function (d) {
                     return y(d.y0 + d.y);
                 })
