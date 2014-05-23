@@ -244,7 +244,7 @@
             svg.select(".x.axis").call(xAxis);
             svg.select(".y.axis").call(yAxis);
 
-            vis.selectAll("path").remove();
+            //vis.selectAll("path").remove();
             var paths = vis.selectAll("path").data(layers);
 
             paths.enter()
@@ -268,7 +268,16 @@
                     return area(d.values);
                 });
 
-            vis.selectAll("circle").remove();
+            vis.selectAll("path")
+                .data(layers)
+                .transition()
+                .duration(2000)
+                .attr("d", function (d) {
+                    return area(d.values);
+                });
+
+
+            //vis.selectAll("circle").remove();
             var node = vis.selectAll("circle").data(data);
             node.enter()
                 .append("circle")
@@ -284,6 +293,16 @@
                 })
                 .on('mouseover', tip.show)
                 .on('mouseout', tip.hide)
+                .transition()
+                .duration(2000)
+                .attr("cy", function (d) {
+                    return y(d.y0 + d.y);
+                })
+                .attr("cx", function (d) {
+                    return x(d.date);
+                });
+
+            vis.selectAll("circle").data(data)
                 .transition()
                 .duration(2000)
                 .attr("cy", function (d) {
